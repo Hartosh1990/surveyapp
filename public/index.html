@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no"/>
+    <meta charset="utf-8">
+
+    <title>Dictionary</title>
+    
+    <link rel="stylesheet" href="/css/style.css"/>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        socket.on("message", printTerms);
+        function printTerms(terms) {
+    $('body>dl').empty();
+    $.each(terms, function () {
+        $('<dt>').text(this.term).appendTo('body>dl');
+        $('<dd>').text(this.defined).appendTo('body>dl');
+    });
+    $('dt').off('dblclick').dblclick(function() {
+        $.ajax({
+            url: '/dictionary-api/' + $(this).text(),
+            type: 'DELETE',
+            success: printTerms
+        });
+    });
+}
+    function addTerm(term) {  
+    
+        $('<dt>').text(term.term).appendTo('body>dl');
+        $('<dd>').text(term.defined).appendTo('body>dl');
+        $('dt').off('dblclick').dblclick(function() {
+        $.ajax({
+            url: '/dictionary-api/' + $(this).text(),
+            type: 'DELETE',
+            success: printTerms
+        });
+    });
+} 
+
+    </script>
+    
+
+</head>
+<body>
+
+    <h1>Dictionary</h1>
+    <dl></dl>
+    <p>Dictionary Empty</p>
+
+    <form>
+        <input type="text" id="term" name="term" placeholder="new word..." required />
+        <input type="Text" name="defined" id="defined" placeholder="meaning..." required />
+        <button>Add Word</button>
+    </form>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/dictionary.js"></script>
+
+</body>
+</html>

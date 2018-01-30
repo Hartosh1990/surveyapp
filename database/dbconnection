@@ -1,0 +1,8 @@
+var mongoclient = require("mongodb").MongoClient;
+module.exports.connect = function(con){
+mongoclient.connect(con, function(err,db){
+    if(err)
+    return "error in connection";
+    return db;
+})
+}
